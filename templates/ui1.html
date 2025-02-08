@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/static/webapp.css">
+</head>
+
+<body>
+    <h2>{{title}}</h2>
+    {% block body %}
+    <div class = "main-container">
+        <section class = "hero">
+            <img src = "/static/hero.jpg" alt = "hero">
+        </section>
+    </div>
+    {% endblock %}
+
+</html>
