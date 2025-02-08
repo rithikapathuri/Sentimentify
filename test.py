@@ -1,0 +1,34 @@
+import torch
+import datasets
+from transformers import pipeline
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from tqdm import tqdm
+from transformers import pipeline
+import google.generativeai as genai
+import os
+from dotenv import load_dotenv
+from PIL import Image
+import json
+
+load_dotenv()
+genai.configure(api_key=os.getenv("GEM_API_KEY"))
+model = genai.GenerativeModel(model_name="gemini-1.5-flash")
+
+#text_input = "Girl are u fr. U should've done ur chores because it was ur responsibility, not cause i had to beg you to."
+#text_input = "Girl are u fr. U ARE INSANE"
+
+image_conv = Image.open("okay_convo.jpeg")
+text_input = model.generate_content([image_conv, "Parse the conversation from this text message stream, and return only the exact content/words in the image, nothing extra."])
+#print(text_input.text)
+
+classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", top_k=None)
+emotion_array = classifier(text_input.text)
+
+prompt = "Using this text input \""+text_input.text+"\", I have analyzed several specific emotions present in the input and their respective numerical values and placed them into the given array. Can you please take this text input and also interpret it according to your sentiment analysis methods, and using both the emotions present in the array and your own interpretation, can you give me specific details about the deeper meaning behind the text input in a short blurb. Make sure not to mention the actual input text or array that I am giving you, only give a short description of the hidden meaning of the input text. Also, make sure to consider that the input may include generational slang and lots of sarcasm, so be extra careful to watch out for any signs of sarcasm and classify the input text appropriately. Expect lots of sarcasm in the text message conversations, and even seemingly neutral messages can have an underlying sarcastic/passive aggressive tone, so please be careful."
+image_conv = Image.open("passive_texts.png")
+response = model.generate_content([str(emotion_array), str(prompt)])
+dict = {"response" : response.text}
+print(json.dumps(dict))
+
