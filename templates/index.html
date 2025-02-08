@@ -1,5 +1,57 @@
 <!DOCTYPE html>
-{% extends "base.html" %}
-{% block body %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis Chatbot</title>
+    <style>
+        body, html {
+            margin-top: 0;
+            padding: 0;
+            height: 100%;
+            text-align: center;
+        }
 
-{% endblock %}
+        .hero {
+            width: 100%;
+            height: 50dvi; 
+            background: url("https://img.freepik.com/free-vector/people-talking-arguing_74855-6616.jpg?t=st=1739042825~exp=1739046425~hmac=9f90dfc978e12f9a361c44b81664a7e250d6dc587d1a79fd3e7d4a62218b8193&w=2000") no-repeat center center;
+            background-size: cover;
+        }
+        .start-btn-container {
+            height: 50vh;
+            display: inline-block;
+            justify-content: normal; 
+            align-items: normal; 
+        }
+
+        /* Styled button */
+        .start-btn {
+            background-color: rgb(31, 130, 235); 
+            color: #ffffff; /* Dark text */
+            font-size: 20px;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .start-btn:hover {
+            background-color: rgb(101, 101, 101);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <img src = "https://img.freepik.com/free-vector/people-talking-arguing_74855-6616.jpg?t=st=1739042825~exp=1739046425~hmac=9f90dfc978e12f9a361c44b81664a7e250d6dc587d1a79fd3e7d4a62218b8193&w=2000", alt="Landscape Image" class="hero">
+        <br>
+        <a href="http://127.0.0.1:5000/chatbot">
+            <button class="start-btn">Start Chat</button>
+        </a>
+    </div>
+
+</body>
+</html>

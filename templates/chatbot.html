@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #c9deee;
+        }
+        #chat-box{
+            max-width: 1000px;
+            margin: auto;
+            background-color: white;
+            padding: 15px;
+            border-radius: 50px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+        .message{
+            max-width: 80%; /* Makes messages adapt to screen size */
+            width: fit-content; /* Shrinks to fit content */
+            padding: 10px;
+            margin: 5px auto; /* Centers messages */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            border-radius: 5px;
+            display: block; /* Ensures proper alignment */
+            border: 2px solid #333; 
+        }
+        .user-textbox{
+            background-color: #c4fad7;
+            text-align: right;
+        }
+        .bot-textbox {
+           background-color: #d4edda;
+           text-align: left;
+       }
+        input, button {
+           padding: 10px;
+           margin-top: 10px;
+           width: 80%;
+       }
+       button {
+           cursor: pointer;
+           background-color: #e2c3ed;
+           color: white;
+           border: none;
+       }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        .back-btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Sentiment Analysis Chatbot</h1>
+    <div id="chat-box"></div>
+    <input type="text" id="user-input" placeholder="How are you feeling today?">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        function sendMessage() {
+            let userInput = document.getElementById("user-input").value;
+            if (!userInput) return;
+            let chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML +=
+            `
+                <div class="message user">
+                    You: ${userInput}
+                </div>
+            `;
+            document.getElementById("user-input").value = "";
+            fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: userInput }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                let botMessage =
+                `
+                    <div class='message bot'>
+                        Bot: ${data.response}
+                    </div>
+                `;
+                chatBox.innerHTML += botMessage;
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+
+</body>
+</html>
