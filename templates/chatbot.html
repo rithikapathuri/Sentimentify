@@ -1,677 +1,549 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Window with Editable Messages</title>
-    <style>
-        /* Google-style font & background */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
-        }
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
- 
- 
-        .window {
-            width: 100%;
-            background: white;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            overflow: hidden;
-            text-align: center;
-            height: 95%;
-            margin-top: 110px;
-            display: flex;
-            flex-direction: column;
-        }
- 
- 
-        .tabs {
-            display: flex;
-            background: #86c6f0;
-            border-bottom: 2px solid #ddd;
-            position: sticky;
-            top: 0;
-        }
- 
- 
-        .tab {
-            flex: 1;
-            padding: 10px;
-            cursor: pointer;
-            font-size: 20px;
-            color: rgb(16, 65, 134);
-            font-weight: bold;
-            position: relative;
-            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
-        }
- 
- 
-        .tab.active {
-            color: #1a73e8;
-            background-color: #b5d5ff;
-        }
- 
- 
-        .tab-indicator {
-            position: absolute;
-            bottom: 0;
-            height: 3px;
-            background-color: #1a73e8;
-            width: 50%;
-            transition: transform 0.3s ease;
- 
- 
-        }
- 
- 
-        .tab-content {
-            display: none;
-            padding: 15px;
-            flex: 1;
-            overflow-y: auto;
-            max-height: calc(80vh-50px);
-        }
- 
- 
-        .tab-content.active {
-            display: block;
-        }
- 
- 
-        #progress-container {
-            width: 300%;
-            text-alight: center;
-            display: flex;
-        }
-        #progress-bar-container {
-            width: 100%;
-            height: 20px;
-            background-color: #f3f3f3;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 5px;
-        }
-        #progress-bar {
-            width: 100;
-            height: 20px;
-            background: #1a73e8; 
-        }
- 
- 
-        #bias-bar-container {
-            width: 100%;
-            height: 20px;
-            background-color: #f3f3f3;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
- 
- 
-        #bias-bar {
-            height: 100%;
-            width: 0%;
-            background-color: red;
-            transition: width 0.5s ease-in-out;
-        }
- 
- 
-        .input-container {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            width: 100%;
-            gap: 10px;
-        }
- 
- 
-        .textarea {
-            flex: 1;
-            height: 150px;
-            min-height: 150px;
-            padding: 8px;
-            font-size: 14px;
-            border: 1px solid #ffffff;
-            border-radius: 5px;
-            resize: none;
-            outline: none;
-            transition: border 0.2s ease;
-            background: #e3eaef;
-        }
- 
- 
-        #input1, #input2 {
-            height: 250px !important;
-            min-height: 250px;
-            width: 1320px !important;
-            min-width: 1320px;
-            resize: vertical;
-            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
-            color: black;
-            font-size: 16px;
-        }
- 
- 
-        .textarea:focus {
-            border: 1px solid #1a73e8;
-        }
- 
- 
-        button {
-            padding: 0px;
-            border: none;
-            margin: 2px 2px 2px 4px;
-            height: 250px;
-            background: #7bc5f5;
-            color: rgb(16, 65, 134);
-            font-size: 25px;
-            border-radius: 8px;
-            height: 55px ;
-            transition: 0.3s ease;
-            text-align: center;
-            width: 55px;
-        }
- 
- 
-        button:hover {
-            background: #0f5bb5;
-            transform: scale(1.05);
-        }
- 
- 
-        .chat-display {
-            width: 100%;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-end;
-            padding: 10px;
-            border-top: 2px solid #ffffff;
-            background: #f9f9f9;
-            position: relative;
-            height: 80%;
-            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
-        }
- 
- 
-        .user-message {
-            padding: 10px;
-            width: 50%;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            text-align: left;
-            font-size: 14px;
-            white-space: normal;
-            word-wrap: break-word;
-            box-sizing: border-box;
-            overflow-wrap: break-word;
-            overflow-y: auto;
-            position: relative;
-        }
- 
- 
-        .bot-response {
-            padding: 10px;
-            width: 50%;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            text-align: right;
-            font-size: 14px;
-            white-space: normal;
-            word-wrap: break-word;
-            box-sizing: border-box;
-            overflow-wrap: break-word;
-            overflow-y: auto;
-            position: relative;
-            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
-        }
- 
- 
-        .user-message {
-            background-color: #176494;
-            color:#ffffff
-        }
- 
- 
-        .bot-response {
-            background-color: #c0e2f8;
-            color:#000000
- 
- 
-        }
- 
- 
-        .navbar {
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Chat Window with Editable Messages</title>
+   <style>
+       /* Google-style font & background */
+       * {
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+           font-family: 'Montserrat', sans-serif;
+       }
+       body {
+           font-family: 'Montserrat', sans-serif;
+           background: #ffffff;
            display: flex;
-           justify-content: space-between;
+           justify-content: center;
            align-items: center;
-           padding: 15px 30px;
-           background: rgba(255, 255, 255, 0.5);
-           backdrop-filter: blur(10px);
-           position: fixed;
+           height: 100vh;
+           margin: 0;
+       }
+       .window {
            width: 100%;
+           background: white;
+           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+           border-radius: 10px;
+           overflow: hidden;
+           text-align: center;
+           height: 95%;
+           margin-top: 110px;
+           display: flex;
+           flex-direction: column;
+       }
+       .tabs {
+           display: flex;
+           background: #86c6f0;
+           border-bottom: 2px solid #ddd;
+           position: sticky;
            top: 0;
-           left: 0;
-           z-index: 1000;
-           box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
        }
- 
- 
- 
- 
-       .navbar .title {
-           font-size: 24px;
+       .tab {
+           flex: 1;
+           padding: 10px;
+           cursor: pointer;
+           font-size: 20px;
+           color: rgb(16, 65, 134);
            font-weight: bold;
+           position: relative;
            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
-           color: #333;
        }
- 
- 
- 
- 
-       .navbar a {
-           text-decoration: none;
-           color: #333;
-           font-size: 18px;
-           font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
-           padding: 10px 20px;
-           margin: 0 15px;
-           transition: 0.3s;
+       .tab.active {
+           color: #1a73e8;
+           background-color: #b5d5ff;
        }
- 
- 
- 
- 
-       .navbar a:hover {
-           background: rgba(0, 0, 0, 0.05);
+       .tab-indicator {
+           position: absolute;
+           bottom: 0;
+           height: 3px;
+           background-color: #1a73e8;
+           width: 50%;
+           transition: transform 0.3s ease;
+       }
+       .tab-content {
+           display: none;
+           padding: 15px;
+           flex: 1;
+           overflow-y: auto;
+           max-height: calc(80vh-50px);
+       }
+       .tab-content.active {
+           display: block;
+       }
+       #progress-container {
+           width: 300%;
+           text-alight: center;
+           display: flex;
+       }
+       #progress-bar-container {
+           width: 100%;
+           height: 20px;
+           background-color: #f3f3f3;
+           border-radius: 10px;
+           overflow: hidden;
+           margin-top: 5px;
+       }
+       #progress-bar {
+           width: 100;
+           height: 20px;
+           background: #1a73e8;
+       }
+       #bias-bar-container {
+           width: 100%;
+           height: 20px;
+           background-color: #f3f3f3;
+           border-radius: 10px;
+           overflow: hidden;
+           margin-top: 10px;
+       }
+       #bias-bar {
+           height: 100%;
+           width: 0%;
+           background-color: blue;
+           transition: width 0.5s ease-in-out;
+       }
+       .input-container {
+           display: flex;
+           flex-direction: row;
+           align-items: center;
+           width: 100%;
+           gap: 10px;
+       }
+       .textarea {
+           flex: 1;
+           height: 150px;
+           min-height: 150px;
+           padding: 8px;
+           font-size: 14px;
+           border: 1px solid #ffffff;
            border-radius: 5px;
-           transform: scale(1.15);
+           resize: none;
+           outline: none;
+           transition: border 0.2s ease;
+           background: #e3eaef;
        }
- 
- 
-       .user-input-forms {
-            display: flex;
-            width: 100%;
-        }
- 
- 
-        .response-text {
-            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
-            color: black;
-            font-size: 16px;
-        }
- 
- 
+       #input1, #input2 {
+           height: 250px !important;
+           min-height: 250px;
+           width: 1320px !important;
+           min-width: 1320px;
+           resize: vertical;
+           font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+           color: black;
+           font-size: 16px;
+       }
+       .textarea:focus {
+           border: 1px solid #1a73e8;
+       }
+       button {
+           padding: 0px;
+           border: none;
+           margin: 2px 2px 2px 4px;
+           height: 250px;
+           background: #7bc5f5;
+           color: rgb(16, 65, 134);
+           font-size: 25px;
+           border-radius: 8px;
+           height: 55px ;
+           transition: 0.3s ease;
+           text-align: center;
+           width: 55px;
+       }
+       button:hover {
+           background: #0f5bb5;
+           transform: scale(1.05);
+       }
+       .chat-display {
+           width: 100%;
+           flex-grow: 1;
+           display: flex;
+           flex-direction: row;
+           justify-content: flex-end;
+           padding: 10px;
+           border-top: 2px solid #ffffff;
+           background: #f9f9f9;
+           position: relative;
+           height: 80%;
+           font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+       }
+       .user-message {
+           padding: 10px;
+           width: 50%;
+           border: 1px solid #ddd;
+           border-radius: 5px;
+           text-align: left;
+           font-size: 14px;
+           white-space: normal;
+           word-wrap: break-word;
+           box-sizing: border-box;
+           overflow-wrap: break-word;
+           overflow-y: auto;
+           position: relative;
+       }
+       .bot-response {
+           padding: 10px;
+           width: 50%;
+           border: 1px solid #ddd;
+           border-radius: 5px;
+           text-align: right;
+           font-size: 14px;
+           white-space: normal;
+           word-wrap: break-word;
+           box-sizing: border-box;
+           overflow-wrap: break-word;
+           overflow-y: auto;
+           position: relative;
+           font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+       }
+       .user-message {
+           background-color: #176494;
+           color:#ffffff
+       }
+       .bot-response {
+           background-color: #c0e2f8;
+           color:#000000
+       }
+       .navbar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 15px 30px;
+          background: rgba(255, 255, 255, 0.5);
+          backdrop-filter: blur(10px);
+          position: fixed;
+          width: 100%;
+          top: 0;
+          left: 0;
+          z-index: 1000;
+          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      }
+      .navbar .title {
+          font-size: 24px;
+          font-weight: bold;
+          font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+          color: #333;
+      }
+      .navbar a {
+          text-decoration: none;
+          color: #333;
+          font-size: 18px;
+          font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+          padding: 10px 20px;
+          margin: 0 15px;
+          transition: 0.3s;
+      }
+      .navbar a:hover {
+          background: rgba(0, 0, 0, 0.05);
+          border-radius: 5px;
+          transform: scale(1.15);
+      }
+      .user-input-forms {
+           display: flex;
+           width: 100%;
+       }
+       .response-text {
+           font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+           color: black;
+           font-size: 16px;
+       }
 
-    </style>
+
+   </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="title" id="titleText"></div>
-        <div>
-            <a href="http://127.0.0.1:5000/" id="homeLink">Home</a>
-            <a href="http://127.0.0.1:5000/chatbot">Identify Sentiments</a>
-        </div>
-    </nav>
-    <!-- Small Centered Window -->
-    <div class="window">
-        <!-- Tab Navigation -->
-        <div class="tabs">
-            <div class="tab active" onclick="switchTab(0)">Articles</div>
-            <div class="tab" onclick="switchTab(1)">Text</div>
-            <div class="tab-indicator"></div>
-        </div>
+   <nav class="navbar">
+       <div class="title" id="titleText"></div>
+       <div>
+           <a href="http://127.0.0.1:5000/" id="homeLink">Home</a>
+           <a href="http://127.0.0.1:5000/chatbot">Identify Sentiments</a>
+       </div>
+   </nav>
+   <!-- Small Centered Window -->
+   <div class="window">
+       <!-- Tab Navigation -->
+       <div class="tabs">
+           <div class="tab active" onclick="switchTab(0)">Articles</div>
+           <div class="tab" onclick="switchTab(1)">Text</div>
+           <div class="tab-indicator"></div>
+       </div>
 
-        <!--<div id="progress-container"> 
-            <label for="bias-bar">Bias Score:</label>
-            <div id="progress-bar-container" id="progress-bar">
-                <div id = "progress-bar"></div>
-            </div> 
-        </div>-->
-        <div id="bias-bar-container">
-            <div id="bias-bar"></div>
-        </div>
-        <!-- Tab Content -->
-        <div class="tab-content active">
-            <div class="input-container">
-                <!--action = "/chatbot/api/article" method = "POST"-->
-                <form class = "user-input-forms" id = "bias-form" onsubmit = "submitForm(event)" >
-                    <textarea name = "article" id="input1" placeholder="Enter an article"></textarea>
-                    <button type = "submit">➤</button>
-                </form>
+
+       <!--<div id="progress-container">
+           <label for="bias-bar">Bias Score:</label>
+           <div id="progress-bar-container" id="progress-bar">
+               <div id = "progress-bar"></div>
+           </div>
+       </div>-->
+       <div id="bias-bar-container">
+           <div id="bias-bar"></div>
+       </div>
+       <!-- Tab Content -->
+       <div class="tab-content active">
+           <div class="input-container">
+               <!--action = "/chatbot/api/article" method = "POST"-->
+               <form class = "user-input-forms" id = "bias-form" onsubmit = "submitForm(event)" >
+                   <textarea name = "article" id="input1" placeholder="Enter an article"></textarea>
+                   <button type = "submit">➤</button>
+               </form>
+           </div>
+          
+
+
+           <!-- Chat display area for Tab 1 -->
+           <div id="chat-display-1" class="chat-display">
+               <p>Bias Score: <span id="bias-score">0</span></p>
+               <div style = "display:block">
+                   <div>
+                       <ul id = "bias-quote-list">
+                          
+                       </ul>
+                   </div>
+                   <p id = "bias-conclusion"></p>
+               </div>
+              
+           </div>
+
+
+         
+       </div>
+
+
+       <div class="tab-content">
+           <div class="input-container">
+               <form class = "user-input-forms" action = "/chatbot/api/chats/text" method = "POST">
+                   <textarea name = "text" id="input2" placeholder="Enter a message"></textarea>
+                   <button onclick="sendMessage(1)">➤</button>
+               </form>
+           </div>
+           <div class="input-container">
+            <form id = "image-bias-form" onsubmit = "submitImage(event)">
+                <input type = "file" name = "img" id="input3"></input>
+            </form>
             </div>
-            
 
-            <!-- Chat display area for Tab 1 -->
-            <div id="chat-display-1" class="chat-display">
-                <p>Bias Score: <span id="bias-score">0</span></p>
-                <div style = "display:block">
-                    <div>
-                        <ul id = "bias-quote-list">
-                            
-                        </ul>
-                    </div>
-                    <p id = "bias-conclusion"></p>
-                </div>
-                
-            </div>
 
-           
-        </div>
+           <!-- Chat display area for Tab 2 -->
+           <div id="chat-display-2" class="chat-display">
+                <p id = "bias-conclusion-text"></p>
+           </div>
+       </div>
+   </div>
 
-        <div class="tab-content">
-            <div class="input-container">
-                <form class = "user-input-forms" action = "/chatbot/api/chats/text" method = "POST">
-                    <textarea name = "text" id="input2" placeholder="Enter a message"></textarea>
-                    <button onclick="sendMessage(1)">➤</button>
-                </form>
-            </div>
 
-            <!-- Chat display area for Tab 2 -->
-            <div id="chat-display-2" class="chat-display"></div>
-        </div>
-    </div>
+   <script>    
+       function switchTab(index) {
+           let tabs = document.querySelectorAll('.tab');
+           let contents = document.querySelectorAll('.tab-content');
+           let indicator = document.querySelector('.tab-indicator');
 
-    <script>
-        let isLoading = false;
-        document.addEventListener('DOMContentLoaded', (event) => {
-            typeText();
-        });
- 
-        function switchTab(index) {
-            let tabs = document.querySelectorAll('.tab');
-            let contents = document.querySelectorAll('.tab-content');
-            let indicator = document.querySelector('.tab-indicator');
 
-            // Remove active class from all
-            tabs.forEach(tab => tab.classList.remove('active'));
-            contents.forEach(content => content.classList.remove('active'));
 
-            // Add active class to the selected tab and content
-            tabs[index].classList.add('active');
-            contents[index].classList.add('active');
 
-            // Move the indicator to the active tab
-            indicator.style.transform = `translateX(${index * 100}%)`;
+           // Remove active class from all
+           tabs.forEach(tab => tab.classList.remove('active'));
+           contents.forEach(content => content.classList.remove('active'));
+
+
+
+
+           // Add active class to the selected tab and content
+           tabs[index].classList.add('active');
+           contents[index].classList.add('active');
+
+
+
+
+           // Move the indicator to the active tab
+           indicator.style.transform = `translateX(${index * 100}%)`;
+       }
+
+
+
+       
+       function submitForm() {
+           event.preventDefault();
+
+           let formData = new FormData(document.getElementById("bias-form"));
+           console.log(formData)
+          
+           fetch("/chatbot/api/article", {
+               method: "POST",
+               body: formData
+           })
+           .then(response => response.json())  // Parse JSON response
+           .then(data => {
+               console.log(data)
+               document.getElementById("bias-score").textContent = data.bias_score;
+               document.getElementById("bias-conclusion").textContent = data.conclusion;
+               list = document.getElementById("bias-quote-list")
+              
+               list.innerHTML = "";
+               data_list = data.direct_quotes;
+               console.log(data_list)
+               data_list.forEach(item => {
+                   const listItem = document.createElement("li")
+                   listItem.textContent = item;
+                   list.appendChild(listItem)
+               })
+               updateBiasVisual(data.bias_score);
+           })
+           .catch(error => console.error("Error:", error));
+       }
+
+       function submitImage() {
+        event.preventDefault();
+
+        const input = document.getElementById("input3")
+        const file = input.files[0]
+
+        if(!file) {
+            alert("Please select an image first!");
+            return;
         }
+        
+        const formData = new FormData();
+        formData.append("image", file);
 
-        function submitForm() {
-            event.preventDefault(); 
+        fetch("/chatbot/api/chats/image", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())  // Parse JSON response
+        .then(data => {
+            console.log(data)
+            document.getElementById("bias-conclusion-text").textContent = data.response;
+        })
+        .catch(error => console.error("Error:", error));
+    }
 
-            let formData = new FormData(document.getElementById("bias-form"));
-            console.log(formData)
-            
-            fetch("/chatbot/api/article", {
-                method: "POST",
-                body: formData
-            })
-            .then(response => response.json())  // Parse JSON response
-            .then(data => {
-                console.log(data)
-                document.getElementById("bias-score").textContent = data.bias_score;
-                document.getElementById("bias-conclusion").textContent = data.conclusion; 
-                list = document.getElementById("bias-quote-list")
-                
-                list.innerHTML = ""; 
-                data_list = data.direct_quotes; 
-                console.log(data_list)
-                data_list.forEach(item => {
-                    const listItem = document.createElement("li")
-                    listItem.textContent = item;
-                    list.appendChild(listItem)
-                })
-                updateBiasVisual(data.bias_score);
-            })
-            .catch(error => console.error("Error:", error));
-        }
+       function updateBiasVisual(score) {
+           let biasBar = document.getElementById("bias-bar");
+           biasBar.style.width = score + "%";
 
-        function updateBiasVisual(score) {
-            let biasBar = document.getElementById("bias-bar");
-            biasBar.style.width = score + "%";
 
-            // Change color dynamically
-            if (score <= 40) {
-                biasBar.style.backgroundColor = "green";
-            } else if (score <= 70) {
-                biasBar.style.backgroundColor = "orange";
-            } else {
-                biasBar.style.backgroundColor = "red";
-            }
-        }
 
-        /*function sendMessage(tabIndex) {
-            let inputField = document.getElementById(tabIndex === 0 ? 'input1' : 'input2');
-            let messageText = inputField.value.trim();
-            if (messageText === '') return;
 
-            // Get the correct display area for messages
-            let chatDisplay = document.getElementById(`chat-display-${tabIndex + 1}`);
+           // Change color dynamically
+           if (score <= 40) {
+               biasBar.style.backgroundColor = "green";
+           } else if (score <= 70) {
+               biasBar.style.backgroundColor = "orange";
+           } else {
+               biasBar.style.backgroundColor = "red";
+           }
+       }
 
-            // Check if a user message already exists, update it instead of creating a new one
-            let userMessageBox = chatDisplay.querySelector('.user-message');
-            if (!userMessageBox) {
-                // Create a new user message container if it doesn't exist
-                userMessageBox = document.createElement('div');
-                userMessageBox.classList.add('user-message');
-                chatDisplay.appendChild(userMessageBox);
-            }
 
-            // Update the user message content
-            userMessageBox.textContent = `You: ${messageText}`;
 
-            // Create or update the bot response container
-            let botResponseBox = chatDisplay.querySelector('.bot-response');
-            if (!botResponseBox) {
-                botResponseBox = document.createElement('div');
-                botResponseBox.classList.add('bot-response');
-                chatDisplay.appendChild(botResponseBox);
-            }
 
-            // Update the bot response (this is a placeholder for AI response)
-            botResponseBox.textContent = `AI: [Response Placeholder]`;
+       /*function sendMessage(tabIndex) {
+           let inputField = document.getElementById(tabIndex === 0 ? 'input1' : 'input2');
+           let messageText = inputField.value.trim();
+           if (messageText === '') return;
 
-            // Clear the input field
-            inputField.value = '';
 
-            // Show Progress Bar 
-            let progressBarContainer = document.querySelector('.progress-container'); 
-            let progressBar = document.getElementById('progress-bar'); 
-            progressBarContainer.style.display = 'block'; 
-            progressBar.style.width = '0%'; 
-            
-            // Simulate progress from 0% to 100% 
-            let progress = 0; 
-            let progressInterval = setInterval(() => { 
-                if (progress >= 100) { 
-                    clearInterval(progressInterval); 
-                    // Hide progress bar after completion 
-                    setTimeout(() => { 
-                        progressBarContainer.style.display = 'none'; 
-                    }, 500); 
-                } 
-                else { 
-                    progress += 10; 
-                    progressBar.style.width = progress + '%'; 
-                } 
-            }, 200);
-        }*/
 
-        <script>
-            let isLoading = false;
-            document.addEventListener('DOMContentLoaded', (event) => {
-                typeText();
-            });
-     
-            function switchTab(index) {
-                let tabs = document.querySelectorAll('.tab');
-                let contents = document.querySelectorAll('.tab-content');
-                let indicator = document.querySelector('.tab-indicator');
-    
-    
-                // Remove active class from all
-                tabs.forEach(tab => tab.classList.remove('active'));
-                contents.forEach(content => content.classList.remove('active'));
-    
-    
-                // Add active class to the selected tab and content
-                tabs[index].classList.add('active');
-                contents[index].classList.add('active');
-    
-    
-                // Move the indicator to the active tab
-                indicator.style.transform = `translateX(${index * 100}%)`;
-            }
-    
-    
-            function submitForm() {
-                event.preventDefault();
-    
-    
-                let formData = new FormData(document.getElementById("bias-form"));
-                console.log(formData)
-               
-                fetch("/chatbot/api/article", {
-                    method: "POST",
-                    body: formData
-                })
-                .then(response => response.json())  // Parse JSON response
-                .then(data => {
-                    console.log(data)
-                    document.getElementById("bias-score").textContent = data.bias_score;
-                    document.getElementById("bias-conclusion").textContent = data.conclusion;
-                    list = document.getElementById("bias-quote-list")
-                   
-                    list.innerHTML = "";
-                    data_list = data.direct_quotes;
-                    console.log(data_list)
-                    data_list.forEach(item => {
-                        const listItem = document.createElement("li")
-                        listItem.textContent = item;
-                        list.appendChild(listItem)
-                    })
-                    updateBiasVisual(data.bias_score);
-                })
-                .catch(error => console.error("Error:", error));
-            }
-    
-    
-            function updateBiasVisual(score) {
-                let biasBar = document.getElementById("bias-bar");
-                biasBar.style.width = score + "%";
-    
-    
-                // Change color dynamically
-                if (score <= 40) {
-                    biasBar.style.backgroundColor = "green";
-                } else if (score <= 70) {
-                    biasBar.style.backgroundColor = "orange";
-                } else {
-                    biasBar.style.backgroundColor = "red";
-                }
-            }
-    
-    
-            /*function sendMessage(tabIndex) {
-                let inputField = document.getElementById(tabIndex === 0 ? 'input1' : 'input2');
-                let messageText = inputField.value.trim();
-                if (messageText === '') return;
-    
-    
-                // Get the correct display area for messages
-                let chatDisplay = document.getElementById(`chat-display-${tabIndex + 1}`);
-    
-    
-                // Check if a user message already exists, update it instead of creating a new one
-                let userMessageBox = chatDisplay.querySelector('.user-message');
-                if (!userMessageBox) {
-                    // Create a new user message container if it doesn't exist
-                    userMessageBox = document.createElement('div');
-                    userMessageBox.classList.add('user-message');
-                    chatDisplay.appendChild(userMessageBox);
-                }
-    
-    
-                // Update the user message content
-                userMessageBox.textContent = `You: ${messageText}`;
-    
-    
-                // Create or update the bot response container
-                let botResponseBox = chatDisplay.querySelector('.bot-response');
-                if (!botResponseBox) {
-                    botResponseBox = document.createElement('div');
-                    botResponseBox.classList.add('bot-response');
-                    chatDisplay.appendChild(botResponseBox);
-                }
-    
-    
-                // Update the bot response (this is a placeholder for AI response)
-                botResponseBox.textContent = `AI: [Response Placeholder]`;
-    
-    
-                // Clear the input field
-                inputField.value = '';
-    
-    
-                // Show Progress Bar
-                let progressBarContainer = document.querySelector('.progress-container');
-                let progressBar = document.getElementById('progress-bar');
-                progressBarContainer.style.display = 'block';
-                progressBar.style.width = '0%';
-               
-                // Simulate progress from 0% to 100%
-                let progress = 0;
-                let progressInterval = setInterval(() => {
-                    if (progress >= 100) {
-                        clearInterval(progressInterval);
-                        // Hide progress bar after completion
-                        setTimeout(() => {
-                            progressBarContainer.style.display = 'none';
-                        }, 500);
-                    }
-                    else {
-                        progress += 10;
-                        progressBar.style.width = progress + '%';
-                    }
-                }, 200);
-            }*/
-    
-    
-            const logoText = document.getElementById("titleText");
-            const text = "Sentimentify";
-            let currentIndex = 0;
-            let typingSpeed = 100;
-            let pauseTime = 2000;
-           
-            function typeText() {
-                if (currentIndex < text.length) {
-                    logoText.innerHTML += text[currentIndex];
-                    currentIndex++;
-                    requestAnimationFrame(() => {
-                        setTimeout(typeText, typingSpeed);
-                    });
-                } else {
-                    setTimeout(() => {
-                        logoText.innerHTML = "";
-                        currentIndex = 0;
-                        typeText();
-                    }, pauseTime);
-                }
-            }
-            typeText();
-    
-    
-        </script>
+
+           // Get the correct display area for messages
+           let chatDisplay = document.getElementById(`chat-display-${tabIndex + 1}`);
+
+
+
+
+           // Check if a user message already exists, update it instead of creating a new one
+           let userMessageBox = chatDisplay.querySelector('.user-message');
+           if (!userMessageBox) {
+               // Create a new user message container if it doesn't exist
+               userMessageBox = document.createElement('div');
+               userMessageBox.classList.add('user-message');
+               chatDisplay.appendChild(userMessageBox);
+           }
+
+
+
+
+           // Update the user message content
+           userMessageBox.textContent = `You: ${messageText}`;
+
+
+
+
+           // Create or update the bot response container
+           let botResponseBox = chatDisplay.querySelector('.bot-response');
+           if (!botResponseBox) {
+               botResponseBox = document.createElement('div');
+               botResponseBox.classList.add('bot-response');
+               chatDisplay.appendChild(botResponseBox);
+           }
+
+
+
+
+           // Update the bot response (this is a placeholder for AI response)
+           botResponseBox.textContent = `AI: [Response Placeholder]`;
+
+
+
+
+           // Clear the input field
+           inputField.value = '';
+
+
+
+
+           // Show Progress Bar
+           let progressBarContainer = document.querySelector('.progress-container');
+           let progressBar = document.getElementById('progress-bar');
+           progressBarContainer.style.display = 'block';
+           progressBar.style.width = '0%';
+          
+           // Simulate progress from 0% to 100%
+           let progress = 0;
+           let progressInterval = setInterval(() => {
+               if (progress >= 100) {
+                   clearInterval(progressInterval);
+                   // Hide progress bar after completion
+                   setTimeout(() => {
+                       progressBarContainer.style.display = 'none';
+                   }, 500);
+               }
+               else {
+                   progress += 10;
+                   progressBar.style.width = progress + '%';
+               }
+           }, 200);
+       }*/
+
+
+
+
+       const logoText = document.getElementById("titleText");
+       const text = "Sentimentify";
+       let currentIndex = 0;
+       let typingSpeed = 100;
+       let pauseTime = 2000;
+      
+       function typeText() {
+           if (currentIndex < text.length) {
+               logoText.innerHTML += text[currentIndex];
+               currentIndex++;
+               requestAnimationFrame(() => {
+                   setTimeout(typeText, typingSpeed);
+               });
+           } else {
+               setTimeout(() => {
+                   logoText.innerHTML = "";
+                   currentIndex = 0;
+                   typeText();
+               }, pauseTime);
+           }
+       }
+       typeText();
+  
+  
+   </script>
 </body>
 </html>
+
