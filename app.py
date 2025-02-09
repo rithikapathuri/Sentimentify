@@ -8,6 +8,13 @@ def index():
         title = "Welcome to my app"
         )
 
+@app.get("/chatbot")
+def chatbot(): 
+    return render_template(
+        "chatbot.html",
+        #title = "Welcome to my app"
+        )
+
 
 if __name__ == "__main__": 
     app.run() 
