@@ -6,8 +6,14 @@
     <title>Chat Window with Editable Messages</title>
     <style>
         /* Google-style font & background */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Montserrat', sans-serif;
             background: #ffffff;
             display: flex;
             justify-content: center;
@@ -15,8 +21,8 @@
             height: 100vh;
             margin: 0;
         }
-
-        /* Small Centered Window */
+ 
+ 
         .window {
             width: 100%;
             background: white;
@@ -29,8 +35,8 @@
             display: flex;
             flex-direction: column;
         }
-
-        /* Tab Navigation Bar */
+ 
+ 
         .tabs {
             display: flex;
             background: #86c6f0;
@@ -38,7 +44,8 @@
             position: sticky;
             top: 0;
         }
-
+ 
+ 
         .tab {
             flex: 1;
             padding: 10px;
@@ -49,13 +56,14 @@
             position: relative;
             font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
         }
-
+ 
+ 
         .tab.active {
             color: #1a73e8;
             background-color: #b5d5ff;
         }
-
-        /* Animated Tab Underline */
+ 
+ 
         .tab-indicator {
             position: absolute;
             bottom: 0;
@@ -63,10 +71,11 @@
             background-color: #1a73e8;
             width: 50%;
             transition: transform 0.3s ease;
-
+ 
+ 
         }
-
-        /* Tab Content */
+ 
+ 
         .tab-content {
             display: none;
             padding: 15px;
@@ -74,16 +83,18 @@
             overflow-y: auto;
             max-height: calc(80vh-50px);
         }
-
+ 
+ 
         .tab-content.active {
             display: block;
         }
-
-        #progress-container { 
-            width: 300%; 
+ 
+ 
+        #progress-container {
+            width: 300%;
             text-alight: center;
-            display: flex; /* Initially hidden */ 
-        } 
+            display: flex;
+        }
         #progress-bar-container {
             width: 100%;
             height: 20px;
@@ -92,12 +103,13 @@
             overflow: hidden;
             margin-top: 5px;
         }
-        #progress-bar { 
-            width: 100; 
-            height: 20px; 
-            background: #1a73e8;  
+        #progress-bar {
+            width: 100;
+            height: 20px;
+            background: #1a73e8; 
         }
-
+ 
+ 
         #bias-bar-container {
             width: 100%;
             height: 20px;
@@ -106,23 +118,29 @@
             overflow: hidden;
             margin-top: 10px;
         }
-
+ 
+ 
         #bias-bar {
             height: 100%;
             width: 0%;
             background-color: red;
             transition: width 0.5s ease-in-out;
         }
-
-        /* Input Area */
+ 
+ 
         .input-container {
             display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
             gap: 10px;
         }
-
-        textarea {
+ 
+ 
+        .textarea {
             flex: 1;
-            height: 50px;
+            height: 150px;
+            min-height: 150px;
             padding: 8px;
             font-size: 14px;
             border: 1px solid #ffffff;
@@ -132,28 +150,47 @@
             transition: border 0.2s ease;
             background: #e3eaef;
         }
-
-        textarea:focus {
+ 
+ 
+        #input1, #input2 {
+            height: 250px !important;
+            min-height: 250px;
+            width: 1320px !important;
+            min-width: 1320px;
+            resize: vertical;
+            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+            color: black;
+            font-size: 16px;
+        }
+ 
+ 
+        .textarea:focus {
             border: 1px solid #1a73e8;
         }
-
+ 
+ 
         button {
             padding: 0px;
             border: none;
+            margin: 2px 2px 2px 4px;
+            height: 250px;
             background: #7bc5f5;
             color: rgb(16, 65, 134);
             font-size: 25px;
-            border-radius: 100px; 
+            border-radius: 8px;
             height: 55px ;
+            transition: 0.3s ease;
             text-align: center;
             width: 55px;
         }
-
+ 
+ 
         button:hover {
             background: #0f5bb5;
+            transform: scale(1.05);
         }
-
-        /* Display Area for Response */
+ 
+ 
         .chat-display {
             width: 100%;
             flex-grow: 1;
@@ -164,9 +201,11 @@
             border-top: 2px solid #ffffff;
             background: #f9f9f9;
             position: relative;
-            height: 80%
+            height: 80%;
+            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
         }
-
+ 
+ 
         .user-message {
             padding: 10px;
             width: 50%;
@@ -174,14 +213,15 @@
             border-radius: 5px;
             text-align: left;
             font-size: 14px;
-            white-space: normal;  /* Allow text wrapping */
+            white-space: normal;
             word-wrap: break-word;
-            box-sizing: border-box; /* Ensure long words break to new lines */
-            overflow-wrap: break-word; 
+            box-sizing: border-box;
+            overflow-wrap: break-word;
             overflow-y: auto;
             position: relative;
         }
-
+ 
+ 
         .bot-response {
             padding: 10px;
             width: 50%;
@@ -189,25 +229,30 @@
             border-radius: 5px;
             text-align: right;
             font-size: 14px;
-            white-space: normal;  /* Allow text wrapping */
+            white-space: normal;
             word-wrap: break-word;
-            box-sizing: border-box; /* Ensure long words break to new lines */
-            overflow-wrap: break-word; 
+            box-sizing: border-box;
+            overflow-wrap: break-word;
             overflow-y: auto;
             position: relative;
+            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
         }
-
+ 
+ 
         .user-message {
             background-color: #176494;
             color:#ffffff
         }
-
+ 
+ 
         .bot-response {
             background-color: #c0e2f8;
             color:#000000
-
+ 
+ 
         }
-
+ 
+ 
         .navbar {
            display: flex;
            justify-content: space-between;
@@ -222,16 +267,20 @@
            z-index: 1000;
            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
        }
-
-
+ 
+ 
+ 
+ 
        .navbar .title {
            font-size: 24px;
            font-weight: bold;
            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
            color: #333;
        }
-
-
+ 
+ 
+ 
+ 
        .navbar a {
            text-decoration: none;
            color: #333;
@@ -241,18 +290,30 @@
            margin: 0 15px;
            transition: 0.3s;
        }
-
-
+ 
+ 
+ 
+ 
        .navbar a:hover {
            background: rgba(0, 0, 0, 0.05);
            border-radius: 5px;
            transform: scale(1.15);
        }
-
-       .user-input-forms { 
-            display: flex; 
-            width: 100%; 
+ 
+ 
+       .user-input-forms {
+            display: flex;
+            width: 100%;
         }
+ 
+ 
+        .response-text {
+            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+            color: black;
+            font-size: 16px;
+        }
+ 
+ 
 
     </style>
 </head>
@@ -324,6 +385,11 @@
     </div>
 
     <script>
+        let isLoading = false;
+        document.addEventListener('DOMContentLoaded', (event) => {
+            typeText();
+        });
+ 
         function switchTab(index) {
             let tabs = document.querySelectorAll('.tab');
             let contents = document.querySelectorAll('.tab-content');
@@ -442,29 +508,170 @@
             }, 200);
         }*/
 
-        const logoText = document.getElementById("titleText");
-        const text = "Sentimentify";
-        let currentIndex = 0;
-        let typingSpeed = 100;
-        let pauseTime = 2000;
-        function typeText() {
-            if (currentIndex < text.length) {
-                logoText.innerHTML += text[currentIndex];
-                currentIndex++;
-                requestAnimationFrame(() => {
-                    setTimeout(typeText, typingSpeed);
-                });
-            } else {
-                setTimeout(() => {
-                    logoText.innerHTML = "";
-                    currentIndex = 0;
-                    typeText();
-                }, pauseTime);
+        <script>
+            let isLoading = false;
+            document.addEventListener('DOMContentLoaded', (event) => {
+                typeText();
+            });
+     
+            function switchTab(index) {
+                let tabs = document.querySelectorAll('.tab');
+                let contents = document.querySelectorAll('.tab-content');
+                let indicator = document.querySelector('.tab-indicator');
+    
+    
+                // Remove active class from all
+                tabs.forEach(tab => tab.classList.remove('active'));
+                contents.forEach(content => content.classList.remove('active'));
+    
+    
+                // Add active class to the selected tab and content
+                tabs[index].classList.add('active');
+                contents[index].classList.add('active');
+    
+    
+                // Move the indicator to the active tab
+                indicator.style.transform = `translateX(${index * 100}%)`;
             }
-        }
-        typeText();
-
-    </script>
-
+    
+    
+            function submitForm() {
+                event.preventDefault();
+    
+    
+                let formData = new FormData(document.getElementById("bias-form"));
+                console.log(formData)
+               
+                fetch("/chatbot/api/article", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json())  // Parse JSON response
+                .then(data => {
+                    console.log(data)
+                    document.getElementById("bias-score").textContent = data.bias_score;
+                    document.getElementById("bias-conclusion").textContent = data.conclusion;
+                    list = document.getElementById("bias-quote-list")
+                   
+                    list.innerHTML = "";
+                    data_list = data.direct_quotes;
+                    console.log(data_list)
+                    data_list.forEach(item => {
+                        const listItem = document.createElement("li")
+                        listItem.textContent = item;
+                        list.appendChild(listItem)
+                    })
+                    updateBiasVisual(data.bias_score);
+                })
+                .catch(error => console.error("Error:", error));
+            }
+    
+    
+            function updateBiasVisual(score) {
+                let biasBar = document.getElementById("bias-bar");
+                biasBar.style.width = score + "%";
+    
+    
+                // Change color dynamically
+                if (score <= 40) {
+                    biasBar.style.backgroundColor = "green";
+                } else if (score <= 70) {
+                    biasBar.style.backgroundColor = "orange";
+                } else {
+                    biasBar.style.backgroundColor = "red";
+                }
+            }
+    
+    
+            /*function sendMessage(tabIndex) {
+                let inputField = document.getElementById(tabIndex === 0 ? 'input1' : 'input2');
+                let messageText = inputField.value.trim();
+                if (messageText === '') return;
+    
+    
+                // Get the correct display area for messages
+                let chatDisplay = document.getElementById(`chat-display-${tabIndex + 1}`);
+    
+    
+                // Check if a user message already exists, update it instead of creating a new one
+                let userMessageBox = chatDisplay.querySelector('.user-message');
+                if (!userMessageBox) {
+                    // Create a new user message container if it doesn't exist
+                    userMessageBox = document.createElement('div');
+                    userMessageBox.classList.add('user-message');
+                    chatDisplay.appendChild(userMessageBox);
+                }
+    
+    
+                // Update the user message content
+                userMessageBox.textContent = `You: ${messageText}`;
+    
+    
+                // Create or update the bot response container
+                let botResponseBox = chatDisplay.querySelector('.bot-response');
+                if (!botResponseBox) {
+                    botResponseBox = document.createElement('div');
+                    botResponseBox.classList.add('bot-response');
+                    chatDisplay.appendChild(botResponseBox);
+                }
+    
+    
+                // Update the bot response (this is a placeholder for AI response)
+                botResponseBox.textContent = `AI: [Response Placeholder]`;
+    
+    
+                // Clear the input field
+                inputField.value = '';
+    
+    
+                // Show Progress Bar
+                let progressBarContainer = document.querySelector('.progress-container');
+                let progressBar = document.getElementById('progress-bar');
+                progressBarContainer.style.display = 'block';
+                progressBar.style.width = '0%';
+               
+                // Simulate progress from 0% to 100%
+                let progress = 0;
+                let progressInterval = setInterval(() => {
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                        // Hide progress bar after completion
+                        setTimeout(() => {
+                            progressBarContainer.style.display = 'none';
+                        }, 500);
+                    }
+                    else {
+                        progress += 10;
+                        progressBar.style.width = progress + '%';
+                    }
+                }, 200);
+            }*/
+    
+    
+            const logoText = document.getElementById("titleText");
+            const text = "Sentimentify";
+            let currentIndex = 0;
+            let typingSpeed = 100;
+            let pauseTime = 2000;
+           
+            function typeText() {
+                if (currentIndex < text.length) {
+                    logoText.innerHTML += text[currentIndex];
+                    currentIndex++;
+                    requestAnimationFrame(() => {
+                        setTimeout(typeText, typingSpeed);
+                    });
+                } else {
+                    setTimeout(() => {
+                        logoText.innerHTML = "";
+                        currentIndex = 0;
+                        typeText();
+                    }, pauseTime);
+                }
+            }
+            typeText();
+    
+    
+        </script>
 </body>
 </html>
