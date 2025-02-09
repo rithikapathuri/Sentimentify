@@ -30,7 +30,7 @@ def gemini_parse_text(image):
     return model.generate_content([image_conv, "Parse the conversation from this text message stream, and return only the exact content/words in the image, nothing extra."]).text
 
 def gemini_eval_text(text):
-    emotion_array = emotion_sents(text = text)
+    emotion_array = emotion_sents(text)
     prompt = "Using this text input \""+text+"\", I have analyzed several specific emotions present in the input and their respective numerical values and placed them into the given array. Can you please take this text input and also interpret it according to your sentiment analysis methods, and using both the emotions present in the array and your own interpretation, can you give me specific details about the deeper meaning behind the text input in a short blurb. Make sure not to mention the actual input text or array that I am giving you, only give a short description of the hidden meaning of the input text. Also, make sure to consider that the input may include generational slang and lots of sarcasm, so be extra careful to watch out for any signs of sarcasm and classify the input text appropriately. Expect lots of sarcasm in the text message conversations, and even seemingly neutral messages can have an underlying sarcastic/passive aggressive tone, so please be careful."
     response = model.generate_content([str(emotion_array), str(prompt)])
     dict = {"response" : response.text}

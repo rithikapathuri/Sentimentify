@@ -312,17 +312,17 @@
 
        <div class="tab-content">
            <div class="input-container">
-               <form class = "user-input-forms" action = "/chatbot/api/chats/text" method = "POST">
+               <form id = "text-bias-form" onsubmit = "submitTextForm(event)">
                    <textarea name = "text" id="input2" placeholder="Enter a message"></textarea>
-                   <button onclick="sendMessage(1)">➤</button>
+                   <button>➤</button>
                </form>
            </div>
            <div class="input-container">
             <form id = "image-bias-form" onsubmit = "submitImage(event)">
                 <input type = "file" name = "img" id="input3"></input>
+                <button>➤</button>
             </form>
             </div>
-
 
            <!-- Chat display area for Tab 2 -->
            <div id="chat-display-2" class="chat-display">
@@ -391,6 +391,24 @@
            })
            .catch(error => console.error("Error:", error));
        }
+
+       function submitTextForm() {
+        event.preventDefault();
+
+        let formData = new FormData(document.getElementById("text-bias-form"));
+        console.log(formData)
+       
+        fetch("/chatbot/api/chats/text", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())  // Parse JSON response
+        .then(data => {
+            console.log(data)
+            document.getElementById("bias-conclusion-text").textContent = data.response;
+        })
+        .catch(error => console.error("Error:", error));
+    }
 
        function submitImage() {
         event.preventDefault();
