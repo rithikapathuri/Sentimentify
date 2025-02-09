@@ -65,15 +65,36 @@
         .back-btn:hover {
             background: #0056b3;
         }
+
+        #loadingSpinner {
+            position: absolute; 
+            z-index: 5; 
+            width: 100%; 
+            height: 100vh; 
+            background-color: white; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;    
+        }
     </style>
 </head>
 <body>
 
     <h1>Sentiment Analysis Chatbot</h1>
     <div id="chat-box"></div>
-    <input type="text" id="user-input" placeholder="How are you feeling today?">
-    <button onclick="sendMessage()">Send</button>
+    <form id = "aiForm" action = "/chatbot/api/chats/image" method = "POST" enctype="multipart/form-data">
+        <input type="file" name="image" placeholder="How are you feeling today?" required>
+        <button id = "requestButton" type = "submit">Send</button>
+    </form>
+    </div>
 
+    <div id = "loadingSpinner">Loading</div>
+
+    <div id = "responseContainer">
+        <p>{{summary}}</p>
+    </div>
+
+    
     <script>
         function sendMessage() {
             let userInput = document.getElementById("user-input").value;
