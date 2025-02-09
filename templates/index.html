@@ -116,6 +116,7 @@
         .about-section-text{
             padding: 20px;
             margin: 10px;
+            align: left;
             font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
             color: black;
         }
@@ -216,14 +217,18 @@
         <div class="about-section-content">
             <img class="about-section-content-img" src="{{ url_for('static', filename='images/dark_messages.jpg') }}" alt="dark messages">
             <div>
-                <p class="about-section-text">Sentimentify is a powerful tool for analyzing news and conversations, uncovering bias, and providing insights into sentiment.</p>
+                <p class="about-section-text">Sentimentify is a powerful tool for analyzing news and conversations,
+                    uncovering bias, and providing insights into the underlying sentiments of everyday media.
+                    For text messages, Sentimentify accepts a text message in text or image form, and delves
+                     into the potential intentions of the message. Is a text sarcastic or passive-aggressive?
+                     Find out with Sentimentify!</p>
             </div>
         </div>
     </section>
     <section class="about-section">
         <div class="about-section-content">
             <div>
-                <p class="about-section-text">Learn how we can help you better understand the media you consume and identify bias in the news.</p>
+                <p class="about-section-text">Input a news article or news excerpt to obtain AI-driven insights on the media you consume. Sentimentify will provide a bias score for any news article, as well as a conclusive summary on the author's potential intentions and quotes from the article that indicate bias.</p>
             </div>
             <img class="about-section-content-img" src="{{ url_for('static', filename='images/light_article.jpg') }}" alt="light article">
         </div>
