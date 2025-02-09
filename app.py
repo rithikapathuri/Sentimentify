@@ -47,12 +47,12 @@ def eval_texts_image():
 @app.route("/chatbot/api/chats/text", methods=["POST"])
 def eval_texts_text(): 
     text = request.form["text"]
-    obj = json.loads(text_model.gemini_eval_image(text))
-    summary = obj["response"]
-    return render_template(
-        "chatbot.html", 
-        summary = summary
-    )
+    print(text)
+    resp_json = text_model.gemini_eval_text(text)
+    print(resp_json)
+    return resp_json
+    #summary = obj["response"]
+    
 
 
 if __name__ == "__main__": 
