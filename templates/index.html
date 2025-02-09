@@ -3,56 +3,265 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sentiment Analysis Chatbot</title>
+    <title>Sentimentify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        body, html {
-            margin-top: 0;
+        * {
+            margin: 0;
             padding: 0;
-            height: 100%;
-            text-align: center;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
         }
 
-        .hero {
-            width: 100%;
-            height: 50vi; 
-            background: url("https://img.freepik.com/premium-vector/colorful-speech-bubbles-flat-vector-isolated-white-background_1332465-5547.jpg") no-repeat center center;
+        body {
+            background: url("{{ url_for('static', filename='images/messages_lightblue.jpg') }}") no-repeat center center fixed;
             background-size: cover;
-            object-fit: cover;
-        }
-        .start-btn-container {
-            height: 50vh;
-            display: inline-block;
-            justify-content: normal; 
-            align-items: normal; 
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        /* Styled button */
-        .start-btn {
-            background-color: rgb(31, 130, 235); 
-            color: #ffffff; /* Dark text */
-            font-size: 20px;
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             padding: 15px 30px;
-            border: none;
-            border-radius: 100px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background 0.3s ease;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .start-btn:hover {
-            background-color: rgb(101, 101, 101);
+        .navbar .title {
+            font-size: 24px;
+            font-weight: bold;
+            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+            color: #333;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #333;
+            font-size: 18px;
+            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+            padding: 10px 20px;
+            margin: 0 15px;
+            transition: 0.3s;
+        }
+
+        .navbar a:hover {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 5px;
+            transform: scale(1.15);
+        }
+
+        .content {
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px 0;
+            margin-top: 100vh;
+        }
+
+        .horizontal-scrolling-items {
+            display: flex;
+            animation: infiniteScroll 20s linear infinite;
+        }
+
+        .horizontal-scrolling-items__item {
+            white-space: nowrap;
+            font-size: 18px;
+            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+            padding: 10px 40px;
+        }
+
+        .horizontal-scrolling-items:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes infiniteScroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        .about-section {
+            background-color: white;
+            padding: 40px 20px;
+            text-align: center;
+
+        }
+
+        .about-section-text-about-us{
+            color: black;
+            font-size: 50px;
+            font-weight: bold;
+            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+        }
+
+        .about-section-text-lines{
+            padding: 20px;
+            margin-top: 60px;
+            margin-bottom: 60px;
+            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+            color: black;
+        }
+
+        .about-section-text{
+            padding: 20px;
+            margin: 10px;
+            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+            color: black;
+        }
+
+        .about-section-content-img {
+            max-width: 40%;
+            height: auto;
+            margin: 0px;
+            border: none;
+            border-radius: 8px;
+            transition: 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .about-section-content-img:hover {
+            transform: scale(1.15);
+        }
+
+        .about-section-content{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-left: 200px;
+            margin-right: 200px;
+            gap: 0px;
+            flex-direction: row;
+        }
+
+        .about-section-content div {
+            flex: 1;
+            padding: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 40%;
+            max-height: 40%;
+            text-align: justify;
+            transition: 0.3s ease;
+        }
+
+        .about-section-content div:hover{
+            transform: scale(1.15);
+        }
+
+        .footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.7);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            flex-direction: column;
+        }
+
+        .footer-text {
+            font-size: 25px;
+            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+            color: #333;
+        }
+
+        .button {
+            padding: 8px 15px;
+            font-size: 25px;
+            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+            color: #fff;
+            background: #8cb3cf;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: normal;
+        }
+
+        .button:hover {
+            background: #8cb3cf;
+            transform: scale(1.15);
         }
     </style>
 </head>
 <body>
-
-    <div class="hero">
-        <img src = "https://img.freepik.com/premium-vector/colorful-speech-bubbles-flat-vector-isolated-white-background_1332465-5547.jpg" alt = "Image", class = "hero">
-        <br>
-        <a href="http://127.0.0.1:5000/chatbot">
-            <button class="start-btn">Start Chat</button>
-        </a>
-    </div>
-
+    <nav class="navbar">
+        <div class="title" id="titleText"></div>
+        <div>
+            <a href="#" id="homeLink">Home</a>
+            <a href="http://127.0.0.1:5000/chatbot">Identify Sentiments</a>
+        </div>
+    </nav>
+    <section class="content" id="content">
+        <div class="horizontal-scrolling-items">
+            <div class="horizontal-scrolling-items__item">We analyze news and conversations to uncover bias and sentiment, enhancing media literacy and understanding.&nbsp;</div>
+            <div class="horizontal-scrolling-items__item">We analyze news and conversations to uncover bias and sentiment, enhancing media literacy and understanding.&nbsp;</div>
+        </div>
+    </section>
+    <section class="about-section">
+        <p class="about-section-text-about-us">About Us</p>
+        <p class="about-section-text-lines">Sentimentify is a powerful tool for analyzing news and conversations, uncovering bias, and providing insights into sentiment.</p>
+        <div class="about-section-content">
+            <img class="about-section-content-img" src="{{ url_for('static', filename='images/dark_messages.jpg') }}" alt="dark messages">
+            <div>
+                <p class="about-section-text">Sentimentify is a powerful tool for analyzing news and conversations, uncovering bias, and providing insights into sentiment.</p>
+            </div>
+        </div>
+    </section>
+    <section class="about-section">
+        <div class="about-section-content">
+            <div>
+                <p class="about-section-text">Learn how we can help you better understand the media you consume and identify bias in the news.</p>
+            </div>
+            <img class="about-section-content-img" src="{{ url_for('static', filename='images/light_article.jpg') }}" alt="light article">
+        </div>
+        <p class="about-section-text-lines">Learn how we can help you better understand the media you consume and identify bias in the news.</p>
+    </section>
+    <footer class="footer">
+        <p class="footer-text">
+            Want to     <a href="http://127.0.0.1:5000/chatbot" class="button">get started</a>     with Sentimentify?
+        </p>
+    </footer>
+    <script>
+        document.getElementById('homeLink').addEventListener('click', function(event) {
+            event.preventDefault();
+            window.location.reload();
+        });
+    </script>
+    <script>
+        const logoText = document.getElementById("titleText");
+        const text = "Sentimentify";
+        let currentIndex = 0;
+        let typingSpeed = 100;
+        let pauseTime = 2000;
+        function typeText() {
+            if (currentIndex < text.length) {
+                logoText.innerHTML += text[currentIndex];
+                currentIndex++;
+                requestAnimationFrame(() => {
+                    setTimeout(typeText, typingSpeed);
+                });
+            } else {
+                setTimeout(() => {
+                    logoText.innerHTML = "";
+                    currentIndex = 0;
+                    typeText();
+                }, pauseTime);
+            }
+        }
+        typeText();
+    </script>
 </body>
 </html>
