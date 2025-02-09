@@ -43,7 +43,7 @@ def gemini_eval (article_text, score_array):
     model = genai.GenerativeModel(model_name="gemini-1.5-flash")
 
 
-    prompt = f"Using this text input: {article_text}, I have analyzed several specific values (neutrality, subjectivity, and presence of approval/disapproval; all are on a scale of 0 to 1) present in the input and their respective numerical values and placed them into the given array. Can you please take this text input and also interpret it according to your sentiment analysis methods, and using both the values present in the array and your own interpretation, can you give me a bias score from 0 to 100 where higher score is higher bias. If there is a level of bias over 50, can you also give me direct quotes from the article that indicate bias (at least 3), and give a concluding summary of the potential biases and background of the writer of the article and their potential stance on the issue. Make sure not to mention the actual input text or array that I am giving you. Please put these in a PROPER JSON format, with a bias_score key, direct_quotes key with a list of direct_quotes (if < 50 bias, this list can be empty), and a conclusion key with the concluding summary. Please provide a response in a structured JSON format that matches the following model: {JSON_SCHEMA}"
+    prompt = f"Using this text input: {article_text}, I have analyzed several specific values (neutrality, subjectivity, and presence of approval/disapproval; all are on a scale of 0 to 1) present in the input and their respective numerical values and placed them into the given array. Can you please take this text input and the array I have provided you and interpret it according to your sentiment analysis methods, and using both the values present in the array and your own interpretation, can you give me a bias score from 0 to 100 where higher score is higher bias and a lower score is representative of a fact-driven article. If the article has slight bias make sure you only give it a score between 30 to 50 accordingly. Remember that bias is detected if the content of the article is opinionated and subjective. Hard or sad facts are not opinionated even if they have strong language. If there is a level of bias over 50, can you also give me direct quotes from the article that indicate bias (at least 3), and give a concluding summary of the potential biases and background of the writer of the article and their potential stance on the issue if you think the article is biased. Make sure not to mention the actual input text or array that I am giving you. Please put these in a PROPER JSON format, with a bias_score key, direct_quotes key with a list of direct_quotes (if < 50 bias, this list can be empty), and a conclusion key with the concluding summary. Please provide a response in a structured JSON format that matches the following model: {JSON_SCHEMA}"
 
     response = model.generate_content([str(score_array), str(prompt)])
 
@@ -68,6 +68,7 @@ def gen_sentiments(article_text):
         except: 
             print("Couldn't evaluate model")
     
+    print(emotion_dict)
     emotion_dict['subjectivity'] = TextBlob(article_text).sentiment.subjectivity
     neutrality_score = emotion_dict['neutral']
     subjectivity_score = emotion_dict['subjectivity']

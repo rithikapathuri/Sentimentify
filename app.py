@@ -25,32 +25,28 @@ def eval_article():
     print("accessed endpoint")
     article = request.form["article"]
     print("received article! ", article[0:50])
-    obj = json.loads(article_model.gen_sentiments(article))
+    sent_json = article_model.gen_sentiments(article)
+    obj = json.loads(sent_json)
     bias_score = obj["bias_score"] #string
     direct_quotes = obj["direct_quotes"] #list of biased quotes
     conclusion = obj["conclusion"]
+    print(conclusion)
     
-    return render_template(
-        "chatbot.html", 
-        bias_score = bias_score,
-        direct_quotes = direct_quotes, 
-        conclusion = conclusion
-    )
+    return sent_json
     
 @app.route("/chatbot/api/chats/image", methods = ["POST"])
 def eval_texts_image(): 
     image = request.files["image"]
     print(image)
-    obj = json.loads(text_model.gemini_eval_image(image))
-    summary = obj["response"]
-    return render_template(
-        "chatbot.html", 
-        summary = summary
-    )
+    resp_json = text_model.gemini_eval_image(image)
+    #obj = json.loads(text_model.gemini_eval_image(image))
+    #summary = obj["response"]
+    print(resp_json)
+    return resp_json
     
-@app.route("/chatbot/api/chats/image", methods=["POST"])
+@app.route("/chatbot/api/chats/text", methods=["POST"])
 def eval_texts_text(): 
-    text = request.text 
+    text = request.form["text"]
     obj = json.loads(text_model.gemini_eval_image(text))
     summary = obj["response"]
     return render_template(

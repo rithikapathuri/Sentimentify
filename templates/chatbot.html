@@ -79,19 +79,39 @@
             display: block;
         }
 
-        .progress-container { 
-            width: 100%; 
-            height: 5px; 
-            background: #ddd; 
-            margin: 0; 
-            display: none; /* Initially hidden */ 
+        #progress-container { 
+            width: 300%; 
+            text-alight: center;
+            display: flex; /* Initially hidden */ 
         } 
-        
-        .progress-bar { 
-            width: 0%; 
-            height: 100%; 
-            background: #1a73e8; 
-            transition: width 0.5s ease; 
+        #progress-bar-container {
+            width: 100%;
+            height: 20px;
+            background-color: #f3f3f3;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        #progress-bar { 
+            width: 100; 
+            height: 20px; 
+            background: #1a73e8;  
+        }
+
+        #bias-bar-container {
+            width: 100%;
+            height: 20px;
+            background-color: #f3f3f3;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        #bias-bar {
+            height: 100%;
+            width: 0%;
+            background-color: red;
+            transition: width 0.5s ease-in-out;
         }
 
         /* Input Area */
@@ -135,6 +155,7 @@
 
         /* Display Area for Response */
         .chat-display {
+            width: 100%;
             flex-grow: 1;
             display: flex;
             flex-direction: row;
@@ -228,6 +249,11 @@
            transform: scale(1.15);
        }
 
+       .user-input-forms { 
+            display: flex; 
+            width: 100%; 
+        }
+
     </style>
 </head>
 <body>
@@ -247,26 +273,49 @@
             <div class="tab-indicator"></div>
         </div>
 
-        <div class="progress-container"> 
-            <div class="progress-bar" id="progress-bar"></div> 
+        <!--<div id="progress-container"> 
+            <label for="bias-bar">Bias Score:</label>
+            <div id="progress-bar-container" id="progress-bar">
+                <div id = "progress-bar"></div>
+            </div> 
+        </div>-->
+        <div id="bias-bar-container">
+            <div id="bias-bar"></div>
         </div>
-
         <!-- Tab Content -->
         <div class="tab-content active">
             <div class="input-container">
-                <textarea id="input1" placeholder="Enter an article"></textarea>
-                <button onclick="sendMessage(0)">➤</button>
+                <!--action = "/chatbot/api/article" method = "POST"-->
+                <form class = "user-input-forms" id = "bias-form" onsubmit = "submitForm(event)" >
+                    <textarea name = "article" id="input1" placeholder="Enter an article"></textarea>
+                    <button type = "submit">➤</button>
+                </form>
             </div>
             
 
             <!-- Chat display area for Tab 1 -->
-            <div id="chat-display-1" class="chat-display"></div>
+            <div id="chat-display-1" class="chat-display">
+                <p>Bias Score: <span id="bias-score">0</span></p>
+                <div style = "display:block">
+                    <div>
+                        <ul id = "bias-quote-list">
+                            
+                        </ul>
+                    </div>
+                    <p id = "bias-conclusion"></p>
+                </div>
+                
+            </div>
+
+           
         </div>
 
         <div class="tab-content">
             <div class="input-container">
-                <textarea id="input2" placeholder="Enter a message"></textarea>
-                <button onclick="sendMessage(1)">➤</button>
+                <form class = "user-input-forms" action = "/chatbot/api/chats/text" method = "POST">
+                    <textarea name = "text" id="input2" placeholder="Enter a message"></textarea>
+                    <button onclick="sendMessage(1)">➤</button>
+                </form>
             </div>
 
             <!-- Chat display area for Tab 2 -->
@@ -292,7 +341,51 @@
             indicator.style.transform = `translateX(${index * 100}%)`;
         }
 
-        function sendMessage(tabIndex) {
+        function submitForm() {
+            event.preventDefault(); 
+
+            let formData = new FormData(document.getElementById("bias-form"));
+            console.log(formData)
+            
+            fetch("/chatbot/api/article", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())  // Parse JSON response
+            .then(data => {
+                console.log(data)
+                document.getElementById("bias-score").textContent = data.bias_score;
+                document.getElementById("bias-conclusion").textContent = data.conclusion; 
+                list = document.getElementById("bias-quote-list")
+                
+                list.innerHTML = ""; 
+                data_list = data.direct_quotes; 
+                console.log(data_list)
+                data_list.forEach(item => {
+                    const listItem = document.createElement("li")
+                    listItem.textContent = item;
+                    list.appendChild(listItem)
+                })
+                updateBiasVisual(data.bias_score);
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        function updateBiasVisual(score) {
+            let biasBar = document.getElementById("bias-bar");
+            biasBar.style.width = score + "%";
+
+            // Change color dynamically
+            if (score <= 40) {
+                biasBar.style.backgroundColor = "green";
+            } else if (score <= 70) {
+                biasBar.style.backgroundColor = "orange";
+            } else {
+                biasBar.style.backgroundColor = "red";
+            }
+        }
+
+        /*function sendMessage(tabIndex) {
             let inputField = document.getElementById(tabIndex === 0 ? 'input1' : 'input2');
             let messageText = inputField.value.trim();
             if (messageText === '') return;
@@ -347,7 +440,7 @@
                     progressBar.style.width = progress + '%'; 
                 } 
             }, 200);
-        }
+        }*/
 
         const logoText = document.getElementById("titleText");
         const text = "Sentimentify";
