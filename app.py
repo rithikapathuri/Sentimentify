@@ -17,7 +17,6 @@ def index():
 def chatbot(): 
     return render_template(
         "chatbot.html",
-        #title = "Welcome to my app"
         )
     
 @app.route("/chatbot/api/article", methods = ["POST"])
@@ -39,21 +38,14 @@ def eval_texts_image():
     image = request.files["image"]
     print(image)
     resp_json = text_model.gemini_eval_image(image)
-    #obj = json.loads(text_model.gemini_eval_image(image))
-    #summary = obj["response"]
     print(resp_json)
     return resp_json
     
 @app.route("/chatbot/api/chats/text", methods=["POST"])
 def eval_texts_text(): 
     text = request.form["text"]
-    print(text)
     resp_json = text_model.gemini_eval_text(text)
-    print(resp_json)
     return resp_json
-    #summary = obj["response"]
-    
-
 
 if __name__ == "__main__": 
     app.run() 

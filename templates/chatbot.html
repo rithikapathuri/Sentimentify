@@ -5,7 +5,6 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Chat Window with Editable Messages</title>
    <style>
-       /* Google-style font & background */
        * {
            margin: 0;
            padding: 0;
@@ -91,25 +90,39 @@
            background: #1a73e8;
        }
        #bias-bar-container {
-           width: 100%;
-           height: 20px;
-           background-color: #f3f3f3;
-           border-radius: 10px;
-           overflow: hidden;
-           margin-top: 10px;
-       }
-       #bias-bar {
-           height: 100%;
-           width: 0%;
-           background-color: blue;
-           transition: width 0.5s ease-in-out;
-       }
+            width: 100%;
+            height: 20px;
+            background-color: #f3f3f3;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+            position: relative;
+        }
+
+
+    #bias-bar {
+        height: 100%;
+        width: 0%;
+        background-color: rgb(255, 255, 255);
+        transition: width 0.5s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 5px;
+        color: white;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
        .input-container {
            display: flex;
            flex-direction: row;
            align-items: center;
            width: 100%;
            gap: 10px;
+           margin: 20px 20px 20px 20px;
        }
        .textarea {
            flex: 1;
@@ -141,11 +154,11 @@
            padding: 0px;
            border: none;
            margin: 2px 2px 2px 4px;
-           height: 250px;
            background: #7bc5f5;
            color: rgb(16, 65, 134);
            font-size: 25px;
            border-radius: 8px;
+           cursor: pointer;
            height: 55px ;
            transition: 0.3s ease;
            text-align: center;
@@ -155,99 +168,139 @@
            background: #0f5bb5;
            transform: scale(1.05);
        }
+
+       .tall-button{
+            height: 250px;
+           min-height: 250px;
+       }
+
+       .img-button{
+            width: 150px;
+            min-widtht: 150px;
+            height: 40px;
+        }
+
+
        .chat-display {
            width: 100%;
+           margin: 40px;
            flex-grow: 1;
            display: flex;
            flex-direction: row;
-           justify-content: flex-end;
+           justify-content: center;
            padding: 10px;
            border-top: 2px solid #ffffff;
            background: #f9f9f9;
            position: relative;
            height: 80%;
            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
-       }
-       .user-message {
-           padding: 10px;
-           width: 50%;
-           border: 1px solid #ddd;
-           border-radius: 5px;
-           text-align: left;
-           font-size: 14px;
-           white-space: normal;
-           word-wrap: break-word;
-           box-sizing: border-box;
-           overflow-wrap: break-word;
-           overflow-y: auto;
-           position: relative;
-       }
-       .bot-response {
-           padding: 10px;
-           width: 50%;
-           border: 1px solid #ddd;
-           border-radius: 5px;
-           text-align: right;
-           font-size: 14px;
-           white-space: normal;
-           word-wrap: break-word;
-           box-sizing: border-box;
-           overflow-wrap: break-word;
-           overflow-y: auto;
-           position: relative;
-           font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
-       }
-       .user-message {
-           background-color: #176494;
-           color:#ffffff
-       }
-       .bot-response {
-           background-color: #c0e2f8;
-           color:#000000
-       }
-       .navbar {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 15px 30px;
-          background: rgba(255, 255, 255, 0.5);
-          backdrop-filter: blur(10px);
-          position: fixed;
-          width: 100%;
-          top: 0;
-          left: 0;
-          z-index: 1000;
-          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-      }
-      .navbar .title {
-          font-size: 24px;
-          font-weight: bold;
-          font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
-          color: #333;
-      }
-      .navbar a {
-          text-decoration: none;
-          color: #333;
-          font-size: 18px;
-          font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
-          padding: 10px 20px;
-          margin: 0 15px;
-          transition: 0.3s;
-      }
-      .navbar a:hover {
-          background: rgba(0, 0, 0, 0.05);
-          border-radius: 5px;
-          transform: scale(1.15);
-      }
-      .user-input-forms {
-           display: flex;
-           width: 100%;
-       }
+        }
+        .user-message {
+            padding: 10px;
+            width: 50%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: left;
+            font-size: 14px;
+            white-space: normal;
+            word-wrap: break-word;
+            box-sizing: border-box;
+            overflow-wrap: break-word;
+            overflow-y: auto;
+            position: relative;
+        }
+        .bot-response {
+            padding: 10px;
+            width: 50%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: right;
+            font-size: 14px;
+            white-space: normal;
+            word-wrap: break-word;
+            box-sizing: border-box;
+            overflow-wrap: break-word;
+            overflow-y: auto;
+            position: relative;
+            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+        }
+        .user-message {
+            background-color: #176494;
+            color:#ffffff
+        }
+        .bot-response {
+            background-color: #c0e2f8;
+            color:#000000
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .navbar .title {
+            font-size: 24px;
+            font-weight: bold;
+            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+            color: #333;
+        }
+        .navbar a {
+            text-decoration: none;
+            color: #333;
+            font-size: 18px;
+            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+            padding: 10px 20px;
+            margin: 0 15px;
+            transition: 0.3s;
+        }
+        .navbar a:hover {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 5px;
+            transform: scale(1.15);
+        }
+        .user-input-forms {
+            display: flex;
+            width: 100%;
+        }
        .response-text {
-           font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
-           color: black;
-           font-size: 16px;
-       }
+            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+            color: black;
+            align-items: center;
+            font-size: 16px;
+            display: block;
+            margin: 20px
+        }
+        .bias-response-text {
+            margin-left: 50px;
+            margin-right: 50px;
+            align-items: center;
+            font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+            color: black;
+            display: block;
+            font-size: 24px;
+        }
+        .response-section {
+            align-items: center;
+            margin-left: 50px;
+            margin-top: 60px;
+            margin-bottom: 60px;
+            margin-right: 50px;
+            align-items: center;
+            style="width: 100%;"
+        }
+
+        #img-div{
+            align-items: center;
+            justify-content: center;
+        }
 
 
    </style>
@@ -257,111 +310,91 @@
        <div class="title" id="titleText"></div>
        <div>
            <a href="http://127.0.0.1:5000/" id="homeLink">Home</a>
-           <a href="http://127.0.0.1:5000/chatbot">Identify Sentiments</a>
+           <a href="http://127.0.0.1:5000/chatbot">Analyze</a>
        </div>
    </nav>
-   <!-- Small Centered Window -->
    <div class="window">
-       <!-- Tab Navigation -->
        <div class="tabs">
            <div class="tab active" onclick="switchTab(0)">Articles</div>
            <div class="tab" onclick="switchTab(1)">Text</div>
            <div class="tab-indicator"></div>
        </div>
-
-
-       <!--<div id="progress-container">
-           <label for="bias-bar">Bias Score:</label>
-           <div id="progress-bar-container" id="progress-bar">
-               <div id = "progress-bar"></div>
-           </div>
-       </div>-->
-       <div id="bias-bar-container">
-           <div id="bias-bar"></div>
-       </div>
-       <!-- Tab Content -->
+       <div id="bias-bar-container">  
+            <div id="bias-bar">      
+                <span id="bias-score-display">0%</span> 
+            </div>
+        </div>
        <div class="tab-content active">
            <div class="input-container">
-               <!--action = "/chatbot/api/article" method = "POST"-->
                <form class = "user-input-forms" id = "bias-form" onsubmit = "submitForm(event)" >
                    <textarea name = "article" id="input1" placeholder="Enter an article"></textarea>
-                   <button type = "submit">➤</button>
+                   <button class="tall-button" type = "submit">➤</button>
                </form>
            </div>
-          
-
-
-           <!-- Chat display area for Tab 1 -->
-           <div id="chat-display-1" class="chat-display">
-               <p>Bias Score: <span id="bias-score">0</span></p>
-               <div style = "display:block">
-                   <div>
-                       <ul id = "bias-quote-list">
-                          
-                       </ul>
-                   </div>
-                   <p id = "bias-conclusion"></p>
-               </div>
-              
-           </div>
-
-
-         
+           <section id="chat-display-1" >
+                <section class="response-section">
+                    <p style="width: 100%;" class="bias-response-text" id="bias-score"></p>
+                </section>
+                <section class="response-section">
+                    <ul id="bias-quote-list" class="response-text" style="text-align: center; list-style-position: inside;"></ul>
+                </section>
+                <section class="response-section">
+                    <p style="width: 100%;" class="response-text" id="bias-conclusion" style="text-align: center;"></p>
+                </section>
+            </section>
        </div>
-
-
        <div class="tab-content">
            <div class="input-container">
-               <form id = "text-bias-form" onsubmit = "submitTextForm(event)">
+               <form id="text-bias-form" class = "user-input-forms" onsubmit = "submitTextForm(event)">
                    <textarea name = "text" id="input2" placeholder="Enter a message"></textarea>
-                   <button>➤</button>
+                   <button class="tall-button" type = "submit">➤</button>
                </form>
            </div>
-           <div class="input-container">
-            <form id = "image-bias-form" onsubmit = "submitImage(event)">
+           <div id="img-div" class="input-container">
+            <form style="align-items=center" id = "image-bias-form" onsubmit = "submitImage(event)">
                 <input type = "file" name = "img" id="input3"></input>
-                <button>➤</button>
+                <button class="img-button" type = "submit">➤</button>
             </form>
             </div>
-
-           <!-- Chat display area for Tab 2 -->
-           <div id="chat-display-2" class="chat-display">
-                <p id = "bias-conclusion-text"></p>
-           </div>
+            <section id="chat-display-2" >
+                <section class="response-section">
+                    <p class="response-text" id = "bias-conclusion-text"></p>
+                </section>
+            </section>
        </div>
    </div>
-
-
    <script>    
        function switchTab(index) {
            let tabs = document.querySelectorAll('.tab');
            let contents = document.querySelectorAll('.tab-content');
            let indicator = document.querySelector('.tab-indicator');
 
-
-
-
-           // Remove active class from all
            tabs.forEach(tab => tab.classList.remove('active'));
            contents.forEach(content => content.classList.remove('active'));
 
-
-
-
-           // Add active class to the selected tab and content
            tabs[index].classList.add('active');
            contents[index].classList.add('active');
 
-
-
-
-           // Move the indicator to the active tab
            indicator.style.transform = `translateX(${index * 100}%)`;
-       }
+        }
 
+        function submitTextForm() {
+            event.preventDefault();
+            let formData = new FormData(document.getElementById("text-bias-form"));
+            console.log(formData)
+        
+            fetch("/chatbot/api/chats/text", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                document.getElementById("bias-conclusion-text").textContent = data.response;
+            })
+            .catch(error => console.error("Error:", error));
+        }
 
-
-       
        function submitForm() {
            event.preventDefault();
 
@@ -372,10 +405,10 @@
                method: "POST",
                body: formData
            })
-           .then(response => response.json())  // Parse JSON response
+           .then(response => response.json())
            .then(data => {
                console.log(data)
-               document.getElementById("bias-score").textContent = data.bias_score;
+               document.getElementById("bias-score").textContent = "Bias Score: "+data.bias_score;
                document.getElementById("bias-conclusion").textContent = data.conclusion;
                list = document.getElementById("bias-quote-list")
               
@@ -392,27 +425,8 @@
            .catch(error => console.error("Error:", error));
        }
 
-       function submitTextForm() {
-        event.preventDefault();
-
-        let formData = new FormData(document.getElementById("text-bias-form"));
-        console.log(formData)
-       
-        fetch("/chatbot/api/chats/text", {
-            method: "POST",
-            body: formData
-        })
-        .then(response => response.json())  // Parse JSON response
-        .then(data => {
-            console.log(data)
-            document.getElementById("bias-conclusion-text").textContent = data.response;
-        })
-        .catch(error => console.error("Error:", error));
-    }
-
        function submitImage() {
         event.preventDefault();
-
         const input = document.getElementById("input3")
         const file = input.files[0]
 
@@ -423,12 +437,11 @@
         
         const formData = new FormData();
         formData.append("image", file);
-
         fetch("/chatbot/api/chats/image", {
             method: "POST",
             body: formData
         })
-        .then(response => response.json())  // Parse JSON response
+        .then(response => response.json())
         .then(data => {
             console.log(data)
             document.getElementById("bias-conclusion-text").textContent = data.response;
@@ -436,131 +449,43 @@
         .catch(error => console.error("Error:", error));
     }
 
-       function updateBiasVisual(score) {
-           let biasBar = document.getElementById("bias-bar");
-           biasBar.style.width = score + "%";
+        function updateBiasVisual(score) {
+            let biasBar = document.getElementById("bias-bar");
+            let biasScoreDisplay = document.getElementById("bias-score-display");
+            biasBar.style.width = score + "%";
+            biasBar.textContent = score + "%";
 
+            if (score <= 40) {
+                biasBar.style.backgroundColor = "#266ca9";
+            } else if (score <= 70) {
+                biasBar.style.backgroundColor = "#0f2573";
+            } else {
+                biasBar.style.backgroundColor = "#01082d";
+            }
+        }
 
-
-
-           // Change color dynamically
-           if (score <= 40) {
-               biasBar.style.backgroundColor = "green";
-           } else if (score <= 70) {
-               biasBar.style.backgroundColor = "orange";
-           } else {
-               biasBar.style.backgroundColor = "red";
-           }
-       }
-
-
-
-
-       /*function sendMessage(tabIndex) {
-           let inputField = document.getElementById(tabIndex === 0 ? 'input1' : 'input2');
-           let messageText = inputField.value.trim();
-           if (messageText === '') return;
-
-
-
-
-           // Get the correct display area for messages
-           let chatDisplay = document.getElementById(`chat-display-${tabIndex + 1}`);
-
-
-
-
-           // Check if a user message already exists, update it instead of creating a new one
-           let userMessageBox = chatDisplay.querySelector('.user-message');
-           if (!userMessageBox) {
-               // Create a new user message container if it doesn't exist
-               userMessageBox = document.createElement('div');
-               userMessageBox.classList.add('user-message');
-               chatDisplay.appendChild(userMessageBox);
-           }
-
-
-
-
-           // Update the user message content
-           userMessageBox.textContent = `You: ${messageText}`;
-
-
-
-
-           // Create or update the bot response container
-           let botResponseBox = chatDisplay.querySelector('.bot-response');
-           if (!botResponseBox) {
-               botResponseBox = document.createElement('div');
-               botResponseBox.classList.add('bot-response');
-               chatDisplay.appendChild(botResponseBox);
-           }
-
-
-
-
-           // Update the bot response (this is a placeholder for AI response)
-           botResponseBox.textContent = `AI: [Response Placeholder]`;
-
-
-
-
-           // Clear the input field
-           inputField.value = '';
-
-
-
-
-           // Show Progress Bar
-           let progressBarContainer = document.querySelector('.progress-container');
-           let progressBar = document.getElementById('progress-bar');
-           progressBarContainer.style.display = 'block';
-           progressBar.style.width = '0%';
-          
-           // Simulate progress from 0% to 100%
-           let progress = 0;
-           let progressInterval = setInterval(() => {
-               if (progress >= 100) {
-                   clearInterval(progressInterval);
-                   // Hide progress bar after completion
-                   setTimeout(() => {
-                       progressBarContainer.style.display = 'none';
-                   }, 500);
-               }
-               else {
-                   progress += 10;
-                   progressBar.style.width = progress + '%';
-               }
-           }, 200);
-       }*/
-
-
-
-
-       const logoText = document.getElementById("titleText");
-       const text = "Sentimentify";
-       let currentIndex = 0;
-       let typingSpeed = 100;
-       let pauseTime = 2000;
-      
-       function typeText() {
-           if (currentIndex < text.length) {
-               logoText.innerHTML += text[currentIndex];
-               currentIndex++;
-               requestAnimationFrame(() => {
-                   setTimeout(typeText, typingSpeed);
-               });
-           } else {
-               setTimeout(() => {
-                   logoText.innerHTML = "";
-                   currentIndex = 0;
-                   typeText();
-               }, pauseTime);
-           }
-       }
-       typeText();
-  
-  
+        const logoText = document.getElementById("titleText");
+        const text = "Sentimentify";
+        let currentIndex = 0;
+        let typingSpeed = 100;
+        let pauseTime = 2000;
+        
+        function typeText() {
+            if (currentIndex < text.length) {
+                logoText.innerHTML += text[currentIndex];
+                currentIndex++;
+                requestAnimationFrame(() => {
+                    setTimeout(typeText, typingSpeed);
+                });
+            } else {
+                setTimeout(() => {
+                    logoText.innerHTML = "";
+                    currentIndex = 0;
+                    typeText();
+                }, pauseTime);
+            }
+        }
+        typeText();
    </script>
 </body>
 </html>
